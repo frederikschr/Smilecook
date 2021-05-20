@@ -1,0 +1,52 @@
+{% extends "base.html" %} {% block title %}Recipes{% endblock %}
+{% block content %}
+<br>
+<h1>Recipes</h1>
+<br>
+<nav aria-label="...">
+  <ul class="pagination">
+    {% if page > 1 %}
+    <li class="page-item enabled">
+    {% else %}
+    <li class="page-item disabled">
+    {% endif %}
+      <a class="page-link" href="./recipes?page={{page - 1}}" tabindex="-1" aria-disabled="true">Previous</a>
+    </li>
+
+    {%  if page > 1 %}
+
+      <li class="page-item"><a class="page-link" href="./recipes?page={{page - 1}}">{{page - 1}}</a></li>
+      <li class="page-item active" aria-current="page">
+
+    {% else %}
+
+      <li class="page-item"><a class="page-link" href="./recipes?page={{page - 1}}">{{page}}</a></li>
+      <li class="page-item active" aria-current="page">
+
+    {% endif %}
+
+      <a class="page-link" href="./recipes?page=2">{{page}}</a>
+    </li>
+    <li class="page-item"><a class="page-link" href="./recipes?page={{page + 1}}">{{page + 1}}</a></li>
+
+    {% if page < last_page %}
+    <li class="page-item enabled">
+
+    {% else %}
+    <li class="page-item disabled">
+
+    {% endif %}
+      <a class="page-link" href="./recipes?page={{page + 1}}">Next</a>
+
+  </li>
+  </ul>
+</nav>
+<ul class="list-group list-group-flush" id="recipes">
+  {% for recipe in recipes %}
+  <li class="list-group-item">
+    {{recipe['name']}} <br> {{recipe['id']}} <br> {{recipe['description']}} <br> <br>
+  </li>
+  {% endfor %}
+</ul>
+
+{% endblock %}
