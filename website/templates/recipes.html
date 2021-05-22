@@ -11,36 +11,57 @@
     <li class="page-item disabled">
     {% endif %}
       <a class="page-link" href="./recipes?page={{page - 1}}" tabindex="-1" aria-disabled="true">Previous</a>
-    </li>
 
-    {%  if page > 1 %}
+  </li>
+    {% if not page == 1%}
+        {% if page == last_page%}
+    <li class="page-item"><a class="page-link" href="./recipes?page={{page - 2}}">{{page - 1}}</a></li>
+    <li class="page-item"><a class="page-link" href="./recipes?page={{page - 1}}">{{page - 2}}</a></li>
 
-      <li class="page-item"><a class="page-link" href="./recipes?page={{page - 1}}">{{page - 1}}</a></li>
-      <li class="page-item active" aria-current="page">
-
+        <li class="page-item active" aria-current="page">
+        <a class="page-link" href="./recipes?page=2">{{page}}</a>
+      </li>
     {% else %}
-
-      <li class="page-item"><a class="page-link" href="./recipes?page={{page - 1}}">{{page}}</a></li>
+      <li class="page-item">
+        <a class="page-link" href="./recipes?page={{page - 1}}">{{page - 1}}</a></li>
       <li class="page-item active" aria-current="page">
+        <a class="page-link" href="./recipes?page=2">{{page}}</a>
+      </li>
 
+      <li class="page-item"><a class="page-link" href="./recipes?page={{page + 1}}">{{page + 1}}</a></li>
     {% endif %}
-
-      <a class="page-link" href="./recipes?page=2">{{page}}</a>
-    </li>
+    {% else %}
+    <li class="page-item active" aria-current="page">
+        <a class="page-link" href="./recipes?page=2">{{page}}</a>
+      </li>
     <li class="page-item"><a class="page-link" href="./recipes?page={{page + 1}}">{{page + 1}}</a></li>
+    <li class="page-item"><a class="page-link" href="./recipes?page={{page + 2}}">{{page + 2}}</a></li>
+    {% endif %}
 
     {% if page < last_page %}
     <li class="page-item enabled">
-
     {% else %}
     <li class="page-item disabled">
-
     {% endif %}
       <a class="page-link" href="./recipes?page={{page + 1}}">Next</a>
-
   </li>
   </ul>
+
+  <br> <br>
+
+
+    <div class="dropdown">
+  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Sorting
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+    <li><a href="#">HTML</a></li>
+    <li><a href="#">CSS</a></li>
+    <li><a href="#">JavaScript</a></li>
+  </ul>
+</div>
+
 </nav>
+
 <ul class="list-group list-group-flush" id="recipes">
   {% for recipe in recipes %}
   <li class="list-group-item">
@@ -48,5 +69,4 @@
   </li>
   {% endfor %}
 </ul>
-
 {% endblock %}
