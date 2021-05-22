@@ -3,6 +3,27 @@
 <br>
 <h1>Recipes</h1>
 <br>
+
+<style>
+.flex-container{
+    width: 100%;
+    min-height: 100px;
+    margin: 0 auto;
+    display: -webkit-flex; /* Safari */
+    display: flex; /* Standard syntax */
+}
+.flex-container .column{
+    padding: 10px;
+    -webkit-flex: 1; /* Safari */
+    -ms-flex: 1; /* IE 10 */
+    flex: 1; /* Standard syntax */
+}
+</style>
+
+<div class="flex-container">
+  <div class="column">
+
+
 <nav aria-label="...">
   <ul class="pagination">
     {% if page > 1 %}
@@ -15,12 +36,21 @@
   </li>
     {% if not page == 1%}
         {% if page == last_page%}
-    <li class="page-item"><a class="page-link" href="./recipes?page={{page - 2}}">{{page - 1}}</a></li>
-    <li class="page-item"><a class="page-link" href="./recipes?page={{page - 1}}">{{page - 2}}</a></li>
 
-        <li class="page-item active" aria-current="page">
-        <a class="page-link" href="./recipes?page=2">{{page}}</a>
-      </li>
+      {% if not last_page == 2%}
+        <li class="page-item"><a class="page-link" href="./recipes?page={{page - 2}}">{{page - 2}}</a></li>
+        <li class="page-item"><a class="page-link" href="./recipes?page={{page - 1}}">{{page - 1}}</a></li>
+
+            <li class="page-item active" aria-current="page">
+            <a class="page-link" href="./recipes?page=2">{{page}}</a>
+          </li>
+      {% else %}
+       <li class="page-item"><a class="page-link" href="./recipes?page={{page - 2}}">{{page - 1}}</a></li>
+
+            <li class="page-item active" aria-current="page">
+            <a class="page-link" href="./recipes?page=2">{{page}}</a>
+          </li>
+      {% endif %}
     {% else %}
       <li class="page-item">
         <a class="page-link" href="./recipes?page={{page - 1}}">{{page - 1}}</a></li>
@@ -31,11 +61,19 @@
       <li class="page-item"><a class="page-link" href="./recipes?page={{page + 1}}">{{page + 1}}</a></li>
     {% endif %}
     {% else %}
-    <li class="page-item active" aria-current="page">
-        <a class="page-link" href="./recipes?page=2">{{page}}</a>
-      </li>
-    <li class="page-item"><a class="page-link" href="./recipes?page={{page + 1}}">{{page + 1}}</a></li>
-    <li class="page-item"><a class="page-link" href="./recipes?page={{page + 2}}">{{page + 2}}</a></li>
+
+      {% if not last_page == 2 %}
+        <li class="page-item active" aria-current="page">
+            <a class="page-link" href="./recipes?page=2">{{page}}</a>
+          </li>
+        <li class="page-item"><a class="page-link" href="./recipes?page={{page + 1}}">{{page + 1}}</a></li>
+        <li class="page-item"><a class="page-link" href="./recipes?page={{page + 2}}">{{page + 2}}</a></li>
+      {% else %}
+          <li class="page-item active" aria-current="page">
+            <a class="page-link" href="./recipes?page=2">{{page}}</a>
+          </li>
+        <li class="page-item"><a class="page-link" href="./recipes?page={{page + 1}}">{{page + 1}}</a></li>
+      {% endif %}
     {% endif %}
 
     {% if page < last_page %}
@@ -46,22 +84,39 @@
       <a class="page-link" href="./recipes?page={{page + 1}}">Next</a>
   </li>
   </ul>
+  </nav>
+    </div>
+       <div class="column">
+          <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Sorting
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li><a href="#">HTML</a></li>
+          <li><a href="#">CSS</a></li>
+          <li><a href="#">JavaScript</a></li>
+        </ul>
+      </div>
+       </div>
 
-  <br> <br>
+         <div class="column">
+          <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Per Page
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li><a href="./recipes?per_page=10">10</a></li>
+          <li><a href="./recipes?per_page=20">20</a></li>
 
+        </ul>
+      </div>
+       </div>
 
-    <div class="dropdown">
-  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Sorting
-  <span class="caret"></span></button>
-  <ul class="dropdown-menu">
-    <li><a href="#">HTML</a></li>
-    <li><a href="#">CSS</a></li>
-    <li><a href="#">JavaScript</a></li>
-  </ul>
+    <div class="column">
+        <form class="d-flex">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </div>
+
 </div>
-
-</nav>
-
 <ul class="list-group list-group-flush" id="recipes">
   {% for recipe in recipes %}
   <li class="list-group-item">
