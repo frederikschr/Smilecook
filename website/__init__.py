@@ -1,5 +1,8 @@
+import os
 from flask import Flask, session
 from datetime import timedelta
+
+URL = os.environ["SMILE_BASE_URL"]
 
 def create_app():
     app = Flask(__name__)

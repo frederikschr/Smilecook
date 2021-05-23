@@ -1,0 +1,75 @@
+{% extends "base.html" %} {% block title %}Create Recipe{% endblock %}
+{% block content %}
+<form method="POST">
+  <h3 align="center">Create recipe</h3>
+  <br>
+
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="name"
+      name="name"
+      placeholder="Enter name"
+    />
+  </div>
+
+    <div class="form-group">
+    <label for="description">Description</label>
+    <input
+      type="text"
+      class="form-control"
+      id="description"
+      name="description"
+      placeholder="Add a description"
+    />
+  </div>
+
+    <div class="form-group">
+    <label for="number of servings">Number of servings</label>
+    <input
+      type="text"
+      class="form-control"
+      id="num_of_servings"
+      name="num_of_servings"
+      placeholder="Enter number of servings"
+    />
+  </div>
+
+      <div class="form-group">
+    <label for="ingredients">Ingredients</label>
+    <input
+      type="text"
+      class="form-control"
+      id="ingredients"
+      name="ingredients"
+      placeholder="ingredients"
+    />
+  </div>
+
+
+      <div class="form-group">
+    <label for="cook time">Cook time</label>
+    <input
+      type="text"
+      class="form-control"
+      id="cook_time"
+      name="cook_time"
+      placeholder="Enter cook time"
+    />
+  </div>
+      <div class="form-group">
+    <label for="directions">Directions</label>
+    <input
+      type="text"
+      class="form-control"
+      id="directions"
+      name="directions"
+      placeholder="Enter directions"
+    />
+
+    <br />
+  <button type="submit" class="btn btn-primary">Create</button>
+</form>
+{% endblock %}

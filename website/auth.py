@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 import requests
+from website import URL
 
 auth = Blueprint("auth", __name__)
 
@@ -14,17 +15,20 @@ def login():
             "password": f"{password}"
         }
 
-        reply = requests.post("https://rssmilecook.herokuapp.com/token", json=params, headers={"Content-Type": "application/json"})
+        reply = requests.post(f"{URL}/token", json=params, headers={"Content-Type": "application/json"})
 
         if reply.status_code == 200:
             access_token, refresh_token = reply.json()["access_token"], reply.json()["refresh_token"]
 
-            username = requests.get("https://rssmilecook.herokuapp.com/me", headers={f"Authorization": f"Bearer {access_token}"}).json()["username"]
+            username = requests.get(f"{URL}/me", headers={f"Authorization": f"Bearer {access_token}"}).json()["username"]
 
             session["username"] = username
             session["email"] = email
             session["access_token"] = access_token
             session["refresh_token"] = refresh_token
+
+            session["per_page"] = 10
+            session["sort"] = "created_add"
 
             flash("Successfully logged into your account.", category="success")
             return redirect(url_for("views.home"))
@@ -35,7 +39,6 @@ def login():
             flash("Email / Password is wrong or you have not made an account yet.", category="error")
         else:
             flash("Something went wrong. Please try again.", category="error")
-
     return render_template("login.html", user=session)
 
 @auth.route("/logout", methods=["GET", "POST"])
@@ -57,7 +60,7 @@ def sign_up():
                 "email": f"{email}",
                 "password": f"{password1}"
             }
-            reply = requests.post("https://rssmilecook.herokuapp.com/users", json=params, headers={"Content-Type": "application/json"})
+            reply = requests.post(f"{URL}/users", json=params, headers={"Content-Type": "application/json"})
             if reply.status_code == 201:
                 flash("Successfully created your account.", category="success")
                 return redirect(url_for("views.home"))
