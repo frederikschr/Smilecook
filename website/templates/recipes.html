@@ -19,9 +19,7 @@
     flex: 1; /* Standard syntax */
 }
 
-
 </style>
-
     <div class="w-container">
         <a href="./recipes/create-recipe" class="w-button">Create recipe</a>
     </div>
@@ -130,7 +128,13 @@
 <ul class="list-group list-group-flush" id="recipes">
   {% for recipe in recipes %}
   <li class="list-group-item">
-    {{recipe['name']}} <br> {{recipe['id']}} <br> {{recipe['description']}} <br> <br>
+      <b>{{recipe['name']}}</b> <br> {{recipe['id']}} <br> {{recipe['description']}} <br> <br>
+      {% if recipe['author']['username'] == session['username'] %}
+
+      <div class="w-container">
+        <a href="./recipes/edit-recipe?id={{recipe['id']}}" class="w-button">Edit</a>
+       </div>
+      {% endif %}
   </li>
   {% endfor %}
 </ul>

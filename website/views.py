@@ -49,52 +49,113 @@ def recipes():
         last_page = reply.json()["pages"]
         total_elements = reply.json()["total"]
 
-        return render_template("recipes.html", recipes=recipes, user=session, page=page, last_page=last_page, total_elements=total_elements, per_page=session["per_page"])
+        return render_template("recipes.html", recipes=recipes, user=session, page=page, last_page=last_page, total_elements=total_elements, per_page=session["per_page"], session=session)
     else:
         return redirect(url_for("views.home"))
 
 
 @views.route("/recipes/create-recipe", methods=["GET", "POST"])
 def create_recipe():
-    if request.method == "POST":
-        name = request.form.get("name")
-        description = request.form.get("description")
-        num_of_servings = request.form.get("num_of_servings")
-        ingredients = request.form.get("ingredients")
-        cook_time = request.form.get("cook_time")
-        directions = request.form.get("directions")
+    if "email" in session:
+        if request.method == "POST":
+            name = request.form.get("name")
+            description = request.form.get("description")
+            num_of_servings = request.form.get("num_of_servings")
+            ingredients = request.form.get("ingredients")
+            cook_time = request.form.get("cook_time")
+            directions = request.form.get("directions")
 
-        if name and description and num_of_servings and ingredients and cook_time and directions:
-            if len(name) <= 3:
-                flash("Please enter a longer name", category="error")
+            if name and description and num_of_servings and ingredients and cook_time and directions:
+                if len(name) <= 3:
+                    flash("Please enter a longer name", category="error")
 
-            elif len(description) <= 5:
-                flash("Please enter a longer description", category="error")
+                elif len(description) <= 5:
+                    flash("Please enter a longer description", category="error")
+
+                else:
+                    params = {
+                        "name": f"{name}",
+                        "description": f"{description}",
+                        "num_of_servings": int(num_of_servings),
+                        "ingredients": f"{ingredients}",
+                        "cook_time": int(cook_time),
+                        "directions": f"{directions}"
+                    }
+
+                    access_token = session["access_token"]
+
+                    reply = requests.post(f"{URL}/recipes", json=params, headers={"Content-Type": "application/json", "Authorization": f"Bearer {access_token}"})
+
+                    if reply.status_code == 201:
+                        id = reply.json()["id"]
+                        publish = requests.put(f"{URL}/recipes/{id}/publish", headers={"Content-Type": "application/json", "Authorization": f"Bearer {access_token}"})
+                        flash("Successfully created a new recipe", category="success")
+
+                    elif reply.status_code == 400:
+                        flash("One or more or the entered values are invalid", category="error")
+                    else:
+                        flash("Something went wrong. Please try again", category="error")
+
+                    return redirect(url_for("views.recipes"))
+
+        return render_template("create_recipe.html", user=session)
+
+
+@views.route("/recipes/edit-recipe", methods=["GET", "POST"])
+def edit_recipe():
+    if "email" in session:
+        try:
+            id = request.args.get("id")
+            reply = requests.get(f"{URL}/recipes/{id}")
+
+            author = reply.json()["author"]["username"]
+            name = reply.json()["name"]
+            description = reply.json()["description"]
+            num_of_servings = reply.json()["num_of_servings"]
+            ingredients = reply.json()["ingredients"]
+            cook_time = reply.json()["cook_time"]
+            directions = reply.json()["directions"]
+
+            if author == session["username"]:
+                if request.method == "POST":
+                    data = request.form
+
+                    name = data["name"]
+                    description = data["description"]
+                    num_of_servings = data["num_of_servings"]
+                    ingredients = data["ingredients"]
+                    cook_time = data["cook_time"]
+                    directions = data["directions"]
+
+                    params = {
+                        "name": f"{name}",
+                        "description": f"{description}",
+                        "num_of_servings": int(num_of_servings),
+                        "ingredients": f"{ingredients}",
+                        "cook_time": int(cook_time),
+                        "directions": f"{directions}"
+                    }
+
+                    access_token = session["access_token"]
+                    patch = requests.patch(f"{URL}/recipes/{id}", json=params, headers={"Content-Type": "application/json", "Authorization": f"Bearer {access_token}"})
+
+                    if patch.status_code == 200:
+                        flash("Successfully made changes to recipe", category="success")
+
+                    elif patch.status_code == 500:
+                        flash("One or more or the entered values are invalid", category="error")
+                    else:
+                        flash("Something went wrong. Pleasy try again", category="error")
+
+                    return redirect(url_for("views.recipes"))
+
+                return render_template("edit_recipe.html", user=session, name=name, description=description, num_of_servings=num_of_servings, ingredients=ingredients, cook_time=cook_time, directions=directions)
 
             else:
-                flash("Successfully created a new recipe", category="success")
-
-                params = {
-                    "name": f"{name}",
-                    "description": f"{description}",
-                    "num_of_servings": int(num_of_servings),
-                    "ingredients": f"{ingredients}",
-                    "cook_time": int(cook_time),
-                    "directions": f"{directions}"
-                }
-
-                access_token = session["access_token"]
-
-                reply = requests.post(f"{URL}/recipes", json=params, headers={"Content-Type": "application/json", "Authorization": f"Bearer {access_token}"})
-
-                id = reply.json()["id"]
-
-                publish = requests.put(f"{URL}/recipes/{id}/publish", headers={"Content-Type": "application/json", "Authorization": f"Bearer {access_token}"})
-
                 return redirect(url_for("views.recipes"))
 
-    return render_template("create_recipe.html")
-
+        except Exception:
+            return redirect(url_for("views.recipes"))
 
 
 
