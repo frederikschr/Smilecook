@@ -1,0 +1,19 @@
+{% extends "base.html" %} {% block title %}Delete Recipe{% endblock %}
+{% block content %}
+
+<script>
+window.onload = function myFunction() {
+  var r = confirm("Are you sure you want to delete this recipe?");
+  if (r == true) {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get('id');
+    window.location.href = "/recipes/delete-recipe?delete=true&id=" + id;
+  } else {
+    window.location.href = "/recipes";
+  }
+  document.getElementById("demo").innerHTML = txt;
+}
+</script>
+
+{% endblock %}

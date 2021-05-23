@@ -20,6 +20,7 @@ def contact():
 @views.route("/recipes", methods=["GET", "POST"])
 def recipes():
     if "email" in session:
+
         search = None
 
         if request.method == "POST":
@@ -44,6 +45,8 @@ def recipes():
 
         else:
             reply = requests.get(f"{URL}/recipes?q={search}")
+
+
 
         recipes = reply.json()["data"]
         last_page = reply.json()["pages"]
@@ -156,6 +159,24 @@ def edit_recipe():
 
         except Exception:
             return redirect(url_for("views.recipes"))
+
+@views.route("/recipes/delete-recipe")
+def delete_recipe():
+    delete = request.args.get("delete")
+    if delete == "true":
+        id = request.args.get("id")
+        access_token = session["access_token"]
+        delete = requests.delete(f"{URL}/recipes/{id}", headers={"Content-Type": "application/json", "Authorization": f"Bearer {access_token}"})
+
+        if delete.status_code == 204:
+            flash("Successfully removed recipe", category="success")
+        else:
+            flash("Something went wrong. Please try again",category="error")
+
+        return redirect(url_for("views.recipes"))
+    return render_template("delete_recipe.html")
+
+
 
 
 

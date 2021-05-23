@@ -134,8 +134,16 @@
       <div class="w-container">
         <a href="./recipes/edit-recipe?id={{recipe['id']}}" class="w-button">Edit</a>
        </div>
+
+      <div class="w-container">
+        <a href="./recipes/delete-recipe?id={{recipe['id']}}" class="w-button">Delete</a>
+       </div>
+
       {% endif %}
+
   </li>
   {% endfor %}
 </ul>
 {% endblock %}
+
+
