@@ -128,9 +128,24 @@
 <ul class="list-group list-group-flush" id="recipes">
   {% for recipe in recipes %}
   <li class="list-group-item">
-      <b>{{recipe['name']}}</b> <br> {{recipe['id']}} <br> {{recipe['description']}} <br> <br>
-      {% if recipe['author']['username'] == session['username'] %}
+      <b>{{recipe['name']}}</b> <br> {{recipe['description']}} <br> <br>
+          <p>
+      <a class="class=w-button" data-toggle="collapse" href="#collapseExample{{recipe['id']}}" role="button" aria-expanded="false" aria-controls="collapseExample{{recipe['id']}}">
+        Show more
+      </a>
+    </p>
+    <div class="collapse" id="collapseExample{{recipe['id']}}">
+      <div class="card card-body">
 
+          ID: {{recipe['id']}}<br>
+          Number of servings: {{recipe['num_of_servings']}}<br>
+          Cook time: {{recipe['cook_time']}} minutes<br>
+
+          <br>
+
+          <img src="{{recipe['cover_url']}}" width="300", height="200">
+
+      {% if recipe['author']['username'] == session['username'] %}
       <div class="w-container">
         <a href="./recipes/edit-recipe?id={{recipe['id']}}" class="w-button">Edit</a>
        </div>
@@ -140,6 +155,9 @@
        </div>
 
       {% endif %}
+      </div>
+    </div>
+
 
   </li>
   {% endfor %}

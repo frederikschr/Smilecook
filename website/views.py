@@ -46,8 +46,6 @@ def recipes():
         else:
             reply = requests.get(f"{URL}/recipes?q={search}")
 
-
-
         recipes = reply.json()["data"]
         last_page = reply.json()["pages"]
         total_elements = reply.json()["total"]
@@ -171,7 +169,7 @@ def delete_recipe():
         if delete.status_code == 204:
             flash("Successfully removed recipe", category="success")
         else:
-            flash("Something went wrong. Please try again",category="error")
+            flash("Something went wrong. Please try again", category="error")
 
         return redirect(url_for("views.recipes"))
     return render_template("delete_recipe.html")
