@@ -1,8 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask_uploads import secure_filename
 import requests
 from website import URL
+import os
 
 views = Blueprint("views", __name__)
+
+from . import app
+
+app.config["UPLOAD_FOLDER"] = "./website/images"
 
 @views.route("/", methods=["GET", "POST"])
 def home():
@@ -20,9 +26,7 @@ def contact():
 @views.route("/recipes", methods=["GET", "POST"])
 def recipes():
     if "email" in session:
-
         search = None
-
         if request.method == "POST":
             search = request.form.get("search")
 
@@ -31,7 +35,6 @@ def recipes():
             page = int(request.args.get("page"))
             if not page >= 1:
                 page = 1
-
         if "per_page" in request.args:
             per_page = int(request.args.get("per_page"))
             session["per_page"] = per_page
@@ -42,7 +45,6 @@ def recipes():
 
         if not search:
             reply = requests.get(f"{URL}/recipes?page={page}&per_page={session['per_page']}&sort={session['sort']}")
-
         else:
             reply = requests.get(f"{URL}/recipes?q={search}")
 
@@ -53,7 +55,6 @@ def recipes():
         return render_template("recipes.html", recipes=recipes, user=session, page=page, last_page=last_page, total_elements=total_elements, per_page=session["per_page"], session=session)
     else:
         return redirect(url_for("views.home"))
-
 
 @views.route("/recipes/create-recipe", methods=["GET", "POST"])
 def create_recipe():
@@ -88,8 +89,24 @@ def create_recipe():
                     reply = requests.post(f"{URL}/recipes", json=params, headers={"Content-Type": "application/json", "Authorization": f"Bearer {access_token}"})
 
                     if reply.status_code == 201:
+
                         id = reply.json()["id"]
+
+                        if not request.files["file"].filename == "":
+                            file = request.files["file"]
+
+                            if file.content_type == "image/jpeg":
+                                filename = secure_filename(file.filename)
+                                file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+                                files = [('cover', (f'{filename}', open(f'{app.config["UPLOAD_FOLDER"]}/{filename}', 'rb'), 'image/jpeg'))]
+                                payload = {}
+                                image = requests.request("PUT", f"{URL}/recipes/{id}/cover", headers={"Authorization": f"Bearer {access_token}"}, data=payload, files=files)
+                            else:
+                                flash("Only accepting JPEG images", category="error")
+                                return redirect(url_for("views.create_recipe"))
+
                         publish = requests.put(f"{URL}/recipes/{id}/publish", headers={"Content-Type": "application/json", "Authorization": f"Bearer {access_token}"})
+
                         flash("Successfully created a new recipe", category="success")
 
                     elif reply.status_code == 400:
@@ -173,14 +190,3 @@ def delete_recipe():
 
         return redirect(url_for("views.recipes"))
     return render_template("delete_recipe.html")
-
-
-
-
-
-
-
-
-
-
-

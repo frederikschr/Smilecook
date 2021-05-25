@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block title %}Create Recipe{% endblock %}
 {% block content %}
-<form method="POST">
+<form method="POST" enctype=multipart/form-data>
   <h3 align="center">Create recipe</h3>
   <br>
 
@@ -48,7 +48,6 @@
     />
   </div>
 
-
       <div class="form-group">
     <label for="cook time">Cook time</label>
     <input
@@ -69,7 +68,10 @@
       placeholder="Enter directions"
     />
 
-    <br />
-  <button type="submit" class="btn btn-primary">Create</button>
+       <br><label for="directions">Image</label>
+      <br><input type=file name=file> <br><br>
+    <button type="submit" class="btn btn-primary" value=Upload>Create</button>
+        </div>
+
 </form>
 {% endblock %}

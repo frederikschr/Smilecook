@@ -1,11 +1,12 @@
 import os
-from flask import Flask, session
+from flask import Flask
 from datetime import timedelta
 
 URL = os.environ["SMILE_BASE_URL"]
 
+app = Flask(__name__)
+
 def create_app():
-    app = Flask(__name__)
     app.config["SECRET_KEY"] = "adadwad"
     app.secret_key = "awdwadwadawd"
     app.permanent_session_lifetime = timedelta(days=3)
