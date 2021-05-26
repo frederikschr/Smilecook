@@ -8,7 +8,7 @@ views = Blueprint("views", __name__)
 
 from . import app
 
-app.config["UPLOAD_FOLDER"] = "./website/images"
+app.config["UPLOAD_FOLDER"] = "./website"
 
 @views.route("/", methods=["GET", "POST"])
 def home():
@@ -104,7 +104,7 @@ def create_recipe():
                                 image = requests.request("PUT", f"{URL}/recipes/{id}/cover", headers={"Authorization": f"Bearer {access_token}"}, data=payload, files=files)
 
                                 del files, image
-                                file = os.path.join("./website/images", str(filename))
+                                file = os.path.join("./website", str(filename))
                                 os.remove(file)
 
                             else:
@@ -171,7 +171,7 @@ def edit_recipe():
                             image = requests.request("PUT", f"{URL}/recipes/{id}/cover", headers={"Authorization": f"Bearer {access_token}"}, data=payload, files=files)
 
                             del files, image
-                            file = os.path.join("./website/images", str(filename))
+                            file = os.path.join("./website", str(filename))
                             os.remove(file)
 
                         else:
