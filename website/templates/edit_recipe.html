@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block title %}Edit Recipe{% endblock %}
 {% block content %}
 
-<form method="POST">
+<form method="POST" enctype=multipart/form-data>
      <h3 align="center">Edit recipe</h3>
      <br>
 
@@ -69,8 +69,13 @@
       placeholder="Enter directions"
     />
 
+       <br><label for="directions">Image</label>
+      <br><input type=file name=file> <br><br>
+    <button type="submit" class="btn btn-primary" value=Upload>Commit changes</button>
+        </div>
+
+      </div>
     <br />
-  <button type="submit" class="btn btn-primary">Commit changes</button>
 </form>
 
 

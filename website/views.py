@@ -26,6 +26,7 @@ def contact():
 @views.route("/recipes", methods=["GET", "POST"])
 def recipes():
     if "email" in session:
+
         search = None
         if request.method == "POST":
             search = request.form.get("search")
@@ -101,6 +102,11 @@ def create_recipe():
                                 files = [('cover', (f'{filename}', open(f'{app.config["UPLOAD_FOLDER"]}/{filename}', 'rb'), 'image/jpeg'))]
                                 payload = {}
                                 image = requests.request("PUT", f"{URL}/recipes/{id}/cover", headers={"Authorization": f"Bearer {access_token}"}, data=payload, files=files)
+
+                                del files, image
+                                file = os.path.join("./website/images", str(filename))
+                                os.remove(file)
+
                             else:
                                 flash("Only accepting JPEG images", category="error")
                                 return redirect(url_for("views.create_recipe"))
@@ -115,9 +121,7 @@ def create_recipe():
                         flash("Something went wrong. Please try again", category="error")
 
                     return redirect(url_for("views.recipes"))
-
         return render_template("create_recipe.html", user=session)
-
 
 @views.route("/recipes/edit-recipe", methods=["GET", "POST"])
 def edit_recipe():
@@ -155,6 +159,25 @@ def edit_recipe():
                     }
 
                     access_token = session["access_token"]
+
+                    if not request.files["file"].filename == "":
+                        file = request.files["file"]
+
+                        if file.content_type == "image/jpeg":
+                            filename = secure_filename(file.filename)
+                            file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+                            files = [('cover', (f'{filename}', open(f'{app.config["UPLOAD_FOLDER"]}/{filename}', 'rb'), 'image/jpeg'))]
+                            payload = {}
+                            image = requests.request("PUT", f"{URL}/recipes/{id}/cover", headers={"Authorization": f"Bearer {access_token}"}, data=payload, files=files)
+
+                            del files, image
+                            file = os.path.join("./website/images", str(filename))
+                            os.remove(file)
+
+                        else:
+                            flash("Only accepting JPEG images", category="error")
+                            return redirect(url_for(f"views.recipes"))
+
                     patch = requests.patch(f"{URL}/recipes/{id}", json=params, headers={"Content-Type": "application/json", "Authorization": f"Bearer {access_token}"})
 
                     if patch.status_code == 200:
