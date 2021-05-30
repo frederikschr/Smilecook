@@ -1,7 +1,31 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
     {% if "username" in user%}
-    <a class="navbar-brand" href=/>{{user['username']}}</a>
+
+    <style>
+    .logo-image{
+    width: 50px;
+    height: 38px;
+    border-radius: 80%;
+    overflow: hidden;
+    margin-top: -0px;
+}   </style>
+
+    <!--
+
+          <div class="logo-image">
+            <img src={{user['avatar']}} class="img-fluid">
+      </div>
+
+      -->
+    <a href="/user-profile">
+    <input type="image" src={{user['avatar']}} height="50px" width="60px" />
+      </a>
+
+
+
+
+
     {% else %}
     <a class="navbar-brand" href="/">SmileCook</a>
     {% endif %}

@@ -198,7 +198,7 @@ def edit_recipe():
         except Exception:
             return redirect(url_for("views.recipes"))
 
-@views.route("/recipes/delete-recipe")
+@views.route("/recipes/delete-recipe", methods=["GET", "POST"])
 def delete_recipe():
     delete = request.args.get("delete")
     if delete == "true":
@@ -213,3 +213,48 @@ def delete_recipe():
 
         return redirect(url_for("views.recipes"))
     return render_template("delete_recipe.html")
+
+@views.route("/user-profile", methods=["GET", "POST"])
+def user_profile():
+
+    if "email" in session:
+        if request.method == "POST":
+
+            if not request.files["file"].filename == "":
+                file = request.files["file"]
+
+                if file.content_type == "image/jpeg":
+                    filename = secure_filename(file.filename)
+                    file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+                    files = [('avatar', (f'{filename}', open(f'{app.config["UPLOAD_FOLDER"]}/{filename}', 'rb'), 'image/jpeg'))]
+                    payload = {}
+
+                    access_token = session["access_token"]
+
+                    image = requests.request("PUT", f"{URL}/users/avatar", headers={"Authorization": f"Bearer {access_token}"}, data=payload, files=files)
+
+                    if image.status_code == 200:
+                        flash("Successfully updated avatar", category="success")
+                        session["avatar"] = image.json()["avatar_url"]
+
+                    else:
+                        flash("Something went wrong. Please try again", category="error")
+
+                    del files, image
+                    file = os.path.join("./website", str(filename))
+                    os.remove(file)
+
+                    return redirect(url_for("views.user_profile"))
+
+                else:
+                    flash("Only accepting JPEG images", category="error")
+                    return redirect(url_for(f"views.recipes"))
+
+
+
+
+        return render_template("user_profile.html", user=session)
+
+    return redirect("auth.login")
+
+

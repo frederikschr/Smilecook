@@ -20,10 +20,14 @@ def login():
         if reply.status_code == 200:
             access_token, refresh_token = reply.json()["access_token"], reply.json()["refresh_token"]
 
-            username = requests.get(f"{URL}/me", headers={f"Authorization": f"Bearer {access_token}"}).json()["username"]
+            json_data = requests.get(f"{URL}/me", headers={f"Authorization": f"Bearer {access_token}"}).json()
+
+            username = json_data["username"]
+            avatar = json_data["avatar_url"]
 
             session["username"] = username
             session["email"] = email
+            session["avatar"] = avatar
             session["access_token"] = access_token
             session["refresh_token"] = refresh_token
 
