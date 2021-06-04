@@ -9,22 +9,17 @@
     border-radius: 80%;
     overflow: hidden;
     margin-top: -0px;
+
+    }
+
+    .nav-link active{
+    width: 100px;
 }   </style>
 
-    <!--
 
-          <div class="logo-image">
-            <img src={{user['avatar']}} class="img-fluid">
-      </div>
-
-      -->
     <a href="/user-profile">
     <input type="image" src={{user['avatar']}} height="50px" width="60px" />
       </a>
-
-
-
-
 
     {% else %}
     <a class="navbar-brand" href="/">SmileCook</a>

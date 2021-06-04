@@ -2,12 +2,10 @@
 {% block content %}
 
 <style>
-
- .iconDetails {
- margin-left:2%;
-float:left;
-height:200px;
-width:300px;
+.iconDetails {
+	margin-left:10%;
+	height:200px;
+	width:300px;
 }
 
 .container2 {
@@ -16,25 +14,23 @@ width:300px;
 	padding:10%;
 }
 
-h4 {
-    margin:0px;
+.profile-image {
+  position: relative;
+  top: -120px;
+  left: 500px;
 }
-
 </style>
 
 <form method="POST" enctype=multipart/form-data>
   <h3 align="center">Your Profile</h3><br>
-
 <div class='container2'>
 		<div style='margin-left:10%; float=right'>
 			<input type=file name=file><br><br>
    			 <button type="submit" class="btn btn-primary" value=Upload>Change</button>
 		</div>
-
-		<div style="margin-left:50%; float=left">
+		<div class="profile-image">
 			<img src={{user['avatar']}} width="100" height="400" class='iconDetails'>
 		</div>
 </div>
 </form>
-
 {% endblock %}

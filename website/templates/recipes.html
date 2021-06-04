@@ -7,7 +7,6 @@
 <style>
 .flex-container{
     width: 100%;
-    min-height: 100px;
     margin: 0 auto;
     display: -webkit-flex; /* Safari */
     display: flex; /* Standard syntax */
@@ -17,13 +16,10 @@
     -webkit-flex: 1; /* Safari */
     -ms-flex: 1; /* IE 10 */
     flex: 1; /* Standard syntax */
-}
+
 
 </style>
-    <div class="w-container">
-        <a href="./recipes/create-recipe" class="w-button">Create recipe</a>
-    </div>
-<br>
+
 
 <div class="flex-container">
   <div class="column">
@@ -89,21 +85,25 @@
   </li>
   </ul>
   </nav>
-    </div>
+
+  </div>
        <div class="column">
           <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Sorting
         <span class="caret"></span></button>
         <ul class="dropdown-menu">
           <li><a href="./recipes?sort=created_at">Created</a></li>
-          <li><a href="./recipes?sort=cook_time">Cook time</li>
+          <li><a href="./recipes?sort=cook_time">Cook time</a></li>
           <li><a href="./recipes?sort=num_of_servings">Number of servings</a></li>
         </ul>
       </div>
        </div>
 
-         <div class="column">
-          <div class="dropdown">
+
+
+    <div class="column" style="position: relative">
+          <div class="dropdown" style="position: relative; left: -135px;">
+
         <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Per Page
         <span class="caret"></span></button>
         <ul class="dropdown-menu">
@@ -121,9 +121,12 @@
         </form>
     </div>
 </div>
-
     <i>Total recipes: {{total_elements}}</i><br>
     <i>Per page: {{per_page}}</i><br><br>
+
+    <div style = "position:relative; left:150px; top: -65px;">
+        <a href="./recipes/create-recipe" class="btn btn-primary" role="button">Create recipe</a>
+    </div>
 
 <ul class="list-group list-group-flush" id="recipes">
   {% for recipe in recipes %}
@@ -142,7 +145,6 @@
           Cook time: {{recipe['cook_time']}} minutes<br>
 
           <br>
-
           <img src="{{recipe['cover_url']}}" width="300", height="200">
 
       {% if recipe['author']['username'] == session['username'] %}
@@ -157,8 +159,6 @@
       {% endif %}
       </div>
     </div>
-
-
   </li>
   {% endfor %}
 </ul>
