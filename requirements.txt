@@ -13,3 +13,4 @@ Jinja2==2.11.3
 jsonify==0.5
 SQLAlchemy==1.4.15
 Werkzeug==0.15.6
+requests
